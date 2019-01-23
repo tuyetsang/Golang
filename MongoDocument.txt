@@ -1,0 +1,105 @@
+use demo_session_5
+db.createCollection('product')
+db.getCollection('product').update(
+{
+	_id:ObjectId('5c402fa2b1aa40c3825f4e8b')	
+},
+{
+	$set:{
+		name:'abc',
+		price:1111
+	}
+}
+}
+db.getCollection('product').insert({
+name:'laptop1',
+price:4.5,
+quantity: 6,
+status:true,
+date:ISODate('2019-10-20'),
+category:{
+_id:new ObjectId(),
+name:'Category 1'
+}
+})
+db.getCollection('product').insert({
+name:'laptop2',
+price:4.5,
+quantity: 6,
+status:false,
+date:ISODate('2019-10-20'),
+category:{
+_id:new ObjectId(),
+name:'Category 2'
+}
+})
+
+db.getCollection('product').remove({
+_id:ObjectId
+})
+
+db.getCollection('product').find({
+    price:{$gt:4}
+    })
+
+db.getCollection('product').find({
+    price:{$lt:10}
+    
+ })
+
+
+db.getCollection('product').find({
+    $and:[
+        {price:{$gte:4}},
+        {price:{$lte:20}}
+    ]
+    })
+
+db.getCollection('product').find({
+    $or:[
+        {price:4},
+        {price:20}
+    ]
+    })
+
+
+db.getCollection('product').find({
+    price:{
+        $ne:5
+        }
+    })
+//tim dau
+db.getCollection('product').find({
+   name:/^lap/
+    })
+//tim cuoi	
+db.getCollection('product').find({
+   name:/top1$/
+    })
+//co chua	
+db.getCollection('product').find({
+   name:/top/
+    })
+db.getCollection('product').find().limit(2)
+db.getCollection('product').find().limit(2).skip(1)
+db.getCollection('product').find().sort({price:1})
+db.getCollection('product').find().sort({_id:-1}).limit(2
+
+
+/*lay cot hien thi*/
+db.getCollection('product').find({},{
+    _id:1,
+    name:1,
+    price:1
+    
+})
+
+
+db.getCollection('product').find({
+	'category.name':'category1'
+
+})
+
+
+
+import mux, handle

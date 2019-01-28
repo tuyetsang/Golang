@@ -4,11 +4,18 @@ import (
 	apis "api"
 	"api/accountapi"
 	"api/demo1api"
+	"api/demo2api"
+	"api/demoapi"
 	"api/mobileapi"
 	"api/productapi"
 	"config"
 	"entities"
 	"fmt"
+	"jwtauth"
+	"middlewares/basic2Auth"
+	"middlewares/jwtmiddleware"
+	"middlewares/log2middleware"
+	"middlewares/logmiddleware"
 	"models"
 	"net/http"
 
@@ -305,7 +312,7 @@ func Demo4() {
 		mobileModel := models.MobileModel{
 			Db: db,
 		}
-		mobiles, err2 := mobileModel.Condition3(4, 20)
+		mobiles, err2 := mobileModel.Search2(4, 20)
 		if err2 != nil {
 			fmt.Println(err2)
 		} else {
@@ -359,6 +366,10 @@ func Demo7() {
 
 func main() {
 	router := mux.NewRouter()
+	router.Use(
+		logmiddleware.Logmiddleware,
+		log2middleware.DateLog,
+	)
 	router.HandleFunc("/api/demo/demo1", demo1api.Demo1).Methods("GET")
 	router.HandleFunc("/api/demo/demo2", demo1api.Demo2).Methods("GET")
 	router.HandleFunc("/api/demo/demo3/{fullName}", demo1api.Demo3).Methods("GET")
@@ -366,8 +377,25 @@ func main() {
 	router.HandleFunc("/api/demo/demo4", demo1api.Demo4).Methods("POST")
 	router.HandleFunc("/api/demo/demo5", demo1api.Demo5).Methods("PUT")
 	router.HandleFunc("/api/demo/demo6/{id}", demo1api.Demo6).Methods("DELETE")
-	router.HandleFunc("/api/account/find", accountapi.Find).Methods("GET")
-	router.HandleFunc("/api/account/findall", accountapi.FindAll).Methods("GET")
+	router.HandleFunc("/api/account/create", accountapi.CreateAccount).Methods("POST")
+	router.HandleFunc("/api/jwt/generratetoken", jwtauth.GenerateToken).Methods("POST")
+	router.Handle("/api/demo/demo1", jwtmiddleware.JWTAuth(http.HandlerFunc(demoapi.Demo1))).Methods("GET")
+
+	router.Handle("/api/demo/demo2", jwtmiddleware.JWTAuth(http.HandlerFunc(demoapi.Demo1))).Methods("GET")
+	// router.HandleFunc("/api/account/find", accountapi.Find).Methods("GET")
+	// router.HandleFunc("/api/account/findall", accountapi.FindAll).Methods("GET")
+	router.HandleFunc("/api/mobile/findall", mobileapi.FindAll).Methods("GET")
+	router.HandleFunc("/api/mobile/find/{id}", mobileapi.Search1).Methods("GET")
+	router.HandleFunc("/api/mobile/search1/{keyword}", mobileapi.SearchKey).Methods("GET")
+	router.HandleFunc("/api/mobile/search2/{min}/{max}", mobileapi.SearchMinMax).Methods("GET")
+	router.HandleFunc("/api/mobile/create", mobileapi.CreateMobile).Methods("POST")
+	router.HandleFunc("/api/mobile/update", mobileapi.UpdateMobile).Methods("PUT")
+	router.HandleFunc("/api/mobile/delete/{id}", mobileapi.DeleteMobile).Methods("DELETE")
+
+	// router.Handle("/api/demo2/hello", log2middleware.Log2middleware(logmiddleware.Logmiddleware(http.HandlerFunc(demo2api.Hello)))).Methods("GET")
+	router.Handle("/api/demo2/hello", basic2Auth.BasicAuth2(http.HandlerFunc(demo2api.Hello))).Methods("GET")
+	router.Handle("/api/demo2/hi", logmiddleware.Logmiddleware(http.HandlerFunc(demo2api.Hi))).Methods("GET")
+	router.HandleFunc("/api/mobile/register", accountapi.CreateAccount).Methods("POST")
 	err := http.ListenAndServe(":3000", router)
 	if err != nil {
 		fmt.Println(err)

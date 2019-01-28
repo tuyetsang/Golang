@@ -52,7 +52,7 @@ func Search(response http.ResponseWriter, request *http.Request) {
 		mobileModel := models.MobileModel{
 			Db: db,
 		}
-		mobiles, err2 := mobileModel.Search(keyword)
+		mobiles, err2 := mobileModel.Search1(keyword)
 		if err2 != nil {
 			responseWithError(response, http.StatusBadRequest, err2.Error())
 		} else {
@@ -74,7 +74,7 @@ func Search2(response http.ResponseWriter, request *http.Request) {
 		mobileModel := models.MobileModel{
 			Db: db,
 		}
-		mobiles, err2 := mobileModel.Condition3(min_float, max_float)
+		mobiles, err2 := mobileModel.Search2(min_float, max_float)
 		if err2 != nil {
 			responseWithError(response, http.StatusBadRequest, err2.Error())
 		} else {
@@ -134,7 +134,7 @@ func Update(response http.ResponseWriter, request *http.Request) {
 				mobile.Name = mobile_param.Name
 				mobile.Price = mobile_param.Price
 				mobile.Quantity = mobile_param.Quantity
-				err4 := mobileModel.Update(mobile)
+				err4 := mobileModel.Update(&mobile)
 				if err4 != nil {
 					responseWithError(response, http.StatusBadRequest, err4.Error())
 				} else {

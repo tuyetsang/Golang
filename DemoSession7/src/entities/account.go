@@ -2,15 +2,17 @@ package entities
 
 import (
 	"fmt"
+
+	"gopkg.in/mgo.v2/bson"
 )
 
 type Account struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-	Age      int    `json:"age"`
-	Status   bool   `json:"status"`
+	Id       bson.ObjectId `json:"id" bson:"_id"`
+	Username string        `json:"username" bson:"username"`
+	Password string        `json:"password" bson:"password"`
+	Fullname string        `json:"fullname" bson:"fullname"`
 }
 
 func (account Account) ToString() string {
-	return fmt.Sprintf("Username:%s\nPassword:%s\nAge:%d\nStatus:%v", account.Username, account.Password, account.Age, account.Status)
+	return fmt.Sprintf("Username:%s\nPassword:%s", account.Username, account.Password)
 }

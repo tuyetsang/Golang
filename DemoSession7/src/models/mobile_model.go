@@ -28,7 +28,7 @@ func (mobileModel MobileModel) Search(key string) ([]entities.Mobile, error) {
 	return mobiles, err
 }
 
-func (mobileModel MobileModel) Search3(key string) ([]entities.Mobile, error) {
+func (mobileModel MobileModel) Search1(key string) ([]entities.Mobile, error) {
 	var mobiles []entities.Mobile
 	err := mobileModel.Db.C("mobile").Find(bson.M{
 		"name": bson.RegEx{
@@ -51,7 +51,7 @@ func (mobileModel MobileModel) Condition2(min float64) ([]entities.Mobile, error
 	}).All(&mobiles)
 	return mobiles, err
 }
-func (mobileModel MobileModel) Condition3(min, max float64) ([]entities.Mobile, error) {
+func (mobileModel MobileModel) Search2(min, max float64) ([]entities.Mobile, error) {
 	var mobiles []entities.Mobile
 	err := mobileModel.Db.C("mobile").Find(bson.M{
 		"$and": []bson.M{
@@ -72,7 +72,7 @@ func (mobileModel MobileModel) Delete(id string) error {
 	return err
 }
 
-func (mobileModel MobileModel) Update(mobile entities.Mobile) error {
+func (mobileModel MobileModel) Update(mobile *entities.Mobile) error {
 	err := mobileModel.Db.C("mobile").UpdateId(mobile.Id, mobile)
 	return err
 }
